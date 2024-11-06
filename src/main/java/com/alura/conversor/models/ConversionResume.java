@@ -32,6 +32,4 @@ public class ConversionResume {
     public String showResume() {
         return getAmount()+"["+getBaseCode()+"]Equivalen a: "+getConversionRate()+"["+getTargetCode()+"]";
     }
-
-
 }

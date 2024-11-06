@@ -1,44 +1,48 @@
 package com.alura.conversor;
 
 import com.alura.conversor.api.ExchangeRateApiController;
-import com.alura.conversor.models.ConversionResume;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
+        ExchangeRateApiController exchangeRate = new ExchangeRateApiController();
         Scanner sc = new Scanner(System.in);
-        int userInput = 0;
-        String inputAmount;
-        String inputBaseCode;
-        String inputTargetCode;
+        int userInput;
 
-        while (true) {
-            System.out.println("------------------------");
-            System.out.println("Conversor de Moneda");
-            System.out.println("------------------------");
-
-            if (userInput == 1) {
-                break;
-            }
-
-            System.out.print("Monto: ");
-            inputAmount = sc.next();
-
-            System.out.print("Convertir de: ");
-            inputBaseCode = sc.next();
-
-            System.out.print("A: ");
-            inputTargetCode = sc.next();
-
-            ExchangeRateApiController res1 = new ExchangeRateApiController(inputBaseCode, inputTargetCode, inputAmount);
-            System.out.println(res1);
-
-            System.out.println("Salir: ");
+        do {
+            menu(exchangeRate);
             userInput = sc.nextInt();
 
+            if (userInput >= 1 && userInput <= exchangeRate.getConversionRates().size()) {
+                System.out.print("Ingrese el valor que desea convertir: ");
+                double ammount = sc.nextDouble();
+
+                makeConversion(userInput - 1, ammount, exchangeRate);
+            } else if (userInput == exchangeRate.getConversionRates().size() + 1) {
+                System.out.println("Saliendo del programa");
+            } else {
+                System.out.println("Opción no valida");
+            }
+        } while (userInput != exchangeRate.getConversionRates().size() + 1);
+        sc.close();
+    }
+
+    private static void menu(ExchangeRateApiController exchangeRate) {
+        System.out.println("***************************");
+
+        for (int i = 0; i < exchangeRate.getConversionRates().size(); i++) {
+            System.out.println((i + 1) + ". " + exchangeRate.getConversionRates().get(i));
         }
+
+        System.out.println((exchangeRate.getConversionRates().size() + 1) + ". Salir");
+        System.out.println("***************************");
+        System.out.print("Elige una opción: ");
+    }
+
+    private static void makeConversion(int index, double ammount, ExchangeRateApiController exchangeRate) {
+        double res = exchangeRate.makeConversion(ammount, index);
+        System.out.printf("El resultado de la conversión es: %.2f\n", res);
 
     }
 }
