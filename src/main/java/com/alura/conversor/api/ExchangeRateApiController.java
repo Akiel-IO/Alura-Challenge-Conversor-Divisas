@@ -14,10 +14,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ExchangeRateApiController {
-    String baseCode;
-    String targetCode;
-    String amount;
-
     Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .create();
@@ -25,7 +21,7 @@ public class ExchangeRateApiController {
     public ExchangeRateApiController(String baseCode, String targetCode, String amount) throws IOException, InterruptedException {
 
         String apiKey = ConfigHandler.getApiKey();
-        String baseURL = "https://v6.exchangerate-api.com/v6/"+apiKey+"/pair/"+baseCode+"/"+targetCode;
+        String baseURL = "https://v6.exchangerate-api.com/v6/"+apiKey+"/pair/"+baseCode+"/"+targetCode+"/"+amount;
 
         try {
             System.out.println(baseURL);
@@ -35,7 +31,6 @@ public class ExchangeRateApiController {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             String json = response.body();
-            //System.out.println(json);
 
             ApiRecord apiRecord = gson.fromJson(json, ApiRecord.class);
 
